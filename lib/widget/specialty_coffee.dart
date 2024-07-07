@@ -119,7 +119,11 @@ class _SpecialtyCoffeeState extends State<SpecialtyCoffee> {
           SizedBox(
             height: 10,
           ),
-          CoffeeSelectCard()
+          CoffeeSelectCard(
+            img: 'assets/bean.png',
+            name: '에티오피아 예가체프 G2',
+            eng_name: 'Ethiopian Yirgacheffe G2',
+          )
         ],
       ),
     );

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:madcamp_week2/constants/colors.dart';
 import 'package:madcamp_week2/pages/tab_page.dart';
+import 'package:madcamp_week2/providers/user_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:simple_ripple_animation/simple_ripple_animation.dart';
 
 class LoginPage extends StatefulWidget {
@@ -11,8 +15,12 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
+
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserController>(context);
+
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
@@ -86,8 +94,11 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   // SizedBox(height: 10,),
                   InkWell(
-                    onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => TabPage()));
+                    onTap: () {
+                      userProvider.signInKakao();
+
+
+                      // Navigator.push(context, MaterialPageRoute(builder: (context) => TabPage()));
                     },
                     child: Container(
                       height: 55,

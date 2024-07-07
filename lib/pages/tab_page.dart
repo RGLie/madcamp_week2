@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:madcamp_week2/constants/colors.dart';
 import 'package:madcamp_week2/pages/note_page.dart';
+import 'package:madcamp_week2/pages/review_page.dart';
 import 'package:motion_tab_bar/MotionTabBar.dart';
 import 'package:motion_tab_bar/MotionTabBarController.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/user_provider.dart';
 
 class TabPage extends StatefulWidget {
   const TabPage({super.key});
@@ -44,9 +49,35 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserController>(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('바리바리', style: TextStyle(color: myColor.mainColor, fontWeight: FontWeight.bold),),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('바리바리', style: TextStyle(color: myColor.mainColor, fontWeight: FontWeight.bold),),
+            IconButton(
+              onPressed: (){
+                Fluttertoast.showToast(
+                    msg: "로그아웃 되었습니다",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: myColor.mainColor,
+                    textColor: Colors.white,
+                    fontSize: 16.0
+                );
+                userProvider.signOutKakao();
+
+
+
+
+              },
+              icon: Icon(Icons.logout_outlined)
+            )
+          ],
+        ),
         backgroundColor: myColor.background,
         foregroundColor: myColor.textColor,
       ),
@@ -85,7 +116,7 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin {
         controller: _motionTabBarController,
         children: [
           NotePage(),
-          Text('안녕'),
+          ReviewPage(),
           Text('안녕'),
           Text('안녕'),
         ],

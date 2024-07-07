@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:madcamp_week2/constants/colors.dart';
 
 class CoffeeSelectCard extends StatefulWidget {
-  const CoffeeSelectCard({super.key});
+  final String img;
+  final String name;
+  final String eng_name;
+  const CoffeeSelectCard({super.key, required this.img, required this.name, required this.eng_name});
 
   @override
   State<CoffeeSelectCard> createState() => _CoffeeSelectCardState();
@@ -12,6 +15,7 @@ class _CoffeeSelectCardState extends State<CoffeeSelectCard> {
   @override
   Widget build(BuildContext context) {
     return Card(
+      surfaceTintColor: myColor.cardColor,
       color: myColor.cardColor,
       // margin: const EdgeInsets.all(16.0),
       shape: RoundedRectangleBorder(
@@ -19,6 +23,9 @@ class _CoffeeSelectCardState extends State<CoffeeSelectCard> {
       elevation: 3, // 카드 하단 그림자 크기
       // shadowColor: Colors.black.withOpacity(0.7),
       child: InkWell(
+        customBorder: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
         // splashColor: myColor.background,
         onTap: () {
           // Navigator.push(
@@ -33,11 +40,11 @@ class _CoffeeSelectCardState extends State<CoffeeSelectCard> {
             leading: Image(
               width: 60,
               image: AssetImage(
-                  'assets/bean.png'
+                  widget.img
               ),
             ),
             title: Text(
-              '에티오피아 예가체프 G2',
+              widget.name,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 fontSize: 16,
@@ -45,7 +52,7 @@ class _CoffeeSelectCardState extends State<CoffeeSelectCard> {
               ),
             ),
             subtitle: Text(
-              'Ethiopian Yirgacheffe G2',
+              widget.eng_name,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 fontSize: 14,

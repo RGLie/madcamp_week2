@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:madcamp_week2/constants/colors.dart';
+import 'package:madcamp_week2/widget/etc_coffee.dart';
+import 'package:madcamp_week2/widget/franchise_coffee.dart';
 import 'package:madcamp_week2/widget/specialty_coffee.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -60,8 +62,8 @@ class _SelectCoffeePageState extends State<SelectCoffeePage> {
                   alignment: AlignmentDirectional.center,
                   children: [
                     Container(
-                      width: 190,
-                      height:190,
+                      width: 180,
+                      height:180,
                       decoration: BoxDecoration(
                         color: myColor.lightColor,
                         borderRadius: BorderRadius.all(Radius.circular(95)),
@@ -69,7 +71,8 @@ class _SelectCoffeePageState extends State<SelectCoffeePage> {
                     ),
                     Image.asset(
                       selectedCoffee%3==0?'assets/special.png':selectedCoffee%3==1?'assets/franchise.png':'assets/etc.png',
-                      width: 260,
+                      width: 230,
+                      height: 230,
                     )
                   ],
                 ),
@@ -104,7 +107,7 @@ class _SelectCoffeePageState extends State<SelectCoffeePage> {
             ),
 
             SizedBox(height: 25,),
-            SpecialtyCoffee()
+            selectedCoffee%3==0?SpecialtyCoffee():selectedCoffee%3==1?FranchiseCoffee():EtcCoffee()
 
 
 

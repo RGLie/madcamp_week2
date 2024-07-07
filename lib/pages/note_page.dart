@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:interactive_slider/interactive_slider.dart';
 import 'package:madcamp_week2/constants/colors.dart';
+import 'package:madcamp_week2/model/test_model.dart';
 import 'package:madcamp_week2/pages/select_coffee_page.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/user_provider.dart';
 
 class NotePage extends StatefulWidget {
   const NotePage({super.key});
@@ -32,12 +36,21 @@ class _NotePageState extends State<NotePage> {
 
   @override
   Widget build(BuildContext context) {
+    final planners = Provider.of<HumanModel>(context);
+    final userProvider = Provider.of<UserController>(context);
+    
     return Padding(
       padding: const EdgeInsets.only(left: 15, right: 15, top: 30.0),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(
+              '안녕하세요, ${userProvider.profileInfo?.properties.nickname.toString()} 님!',
+              style: TextStyle(color: myColor.textColor, fontWeight: FontWeight.bold, fontSize: 24),
+            ),
+            SizedBox(height: 10,),
+
             Container(
               width: double.maxFinite,
               child: Stack(
@@ -77,6 +90,9 @@ class _NotePageState extends State<NotePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text('커피를 선택해주세요', style: TextStyle(color: myColor.grayA),),
+                if(planners.human_lst.length>0)...[
+                  Text(planners.human_lst[3].name)
+                ]
               ],
             ),
             SizedBox(height: 5,),
@@ -89,6 +105,7 @@ class _NotePageState extends State<NotePage> {
                 ),
                 onPressed: (){
                   Navigator.push(context, MaterialPageRoute(builder: (context) => SelectCoffeePage()));
+                  planners.loadHuman();
 
                 },
                 child: Text('커피 선택하기', style: TextStyle(color: myColor.cardColor),),

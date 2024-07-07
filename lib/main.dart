@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:madcamp_week2/constants/colors.dart';
+import 'package:madcamp_week2/model/test_model.dart';
 import 'package:madcamp_week2/pages/login_page.dart';
+import 'package:madcamp_week2/pages/root_page.dart';
+import 'package:madcamp_week2/providers/user_provider.dart';
+import 'package:provider/provider.dart';
 
 void main() {
+  KakaoSdk.init(nativeAppKey: '68780500961d2727792ebaed3c71f633');
   runApp(const MyApp());
 }
 
@@ -34,7 +40,14 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: myColor.background,
         useMaterial3: true,
       ),
-      home: LoginPage(),
+      home: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+              create: (BuildContext context) => UserController()),
+          ChangeNotifierProvider(create: (_) => HumanModel()),
+        ],
+        child: RootPage(),
+      ),
     );
   }
 }

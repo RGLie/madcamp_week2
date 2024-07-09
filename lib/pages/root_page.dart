@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:madcamp_week2/model/coffee_note_model.dart';
 import 'package:madcamp_week2/pages/login_page.dart';
 import 'package:madcamp_week2/pages/tab_page.dart';
 import 'package:madcamp_week2/providers/user_provider.dart';
@@ -19,8 +20,11 @@ class _RootPageState extends State<RootPage> {
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       var uProvider = Provider.of<UserController>(context, listen: false);
+      var coffeeProvider = Provider.of<CoffeeNoteModel>(context, listen: false);
 
       uProvider.checkToken();
+      coffeeProvider.loadCoffeeNotes();
+
     });
   }
 
@@ -39,6 +43,11 @@ class _RootPageState extends State<RootPage> {
       // print(userProvider.user?.kakaoAccount!.email);
       // print(userProvider.user?.kakaoAccount!.name);
       // print(userProvider.user?.kakaoAccount!.phoneNumber);
+      if(userProvider.coffeeUser == null){
+        userProvider.getCoffeeUserData();
+      }
+
+
 
       return TabPage();
     }

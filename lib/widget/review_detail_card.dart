@@ -4,7 +4,24 @@ import 'package:madcamp_week2/pages/coffee_detail_page.dart';
 
 
 class ReviewDetailCard extends StatefulWidget {
-  const ReviewDetailCard({super.key});
+  String img;
+  String score;
+  String feels;
+  String sweet;
+  String sour;
+  String bitter;
+  String body;
+
+  ReviewDetailCard({super.key,
+    required this.img,
+    required this.score,
+    required this.feels,
+    required this.sweet,
+    required this.sour,
+    required this.bitter,
+    required this.body,
+
+  });
 
   @override
   State<ReviewDetailCard> createState() => _ReviewDetailCardState();
@@ -36,26 +53,15 @@ class _ReviewDetailCardState extends State<ReviewDetailCard> {
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 2),
           child: ListTile(
-            leading: Image(
-              width: 60,
-              image: AssetImage(
-                  'assets/bean.png'
-              ),
-            ),
-            title: Text(
-              '닉네임',
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: 12,
-                color: myColor.grayA,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            // leading: Image.network(
+            //   widget.img,
+            //   width: 60,
+            // ),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '향이 굉장히 좋아요~!',
+                  widget.feels,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 3,
                   style: TextStyle(
@@ -71,7 +77,7 @@ class _ReviewDetailCardState extends State<ReviewDetailCard> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Text('96',
+                        Text(widget.score.toString(),
                           style: TextStyle(fontWeight: FontWeight.bold, fontSize:35, color: myColor.textColor, height: 1.0),
                         ),
                         SizedBox(width: 3,),
@@ -87,14 +93,14 @@ class _ReviewDetailCardState extends State<ReviewDetailCard> {
                           children: [
                             Text('단맛', style: TextStyle(fontWeight: FontWeight.bold, fontSize:12, color: myColor.grayA,)),
                             SizedBox(width: 5,),
-                            Text('80', style: TextStyle(fontWeight: FontWeight.bold, fontSize:14,))
+                            Text(widget.sweet.toString(), style: TextStyle(fontWeight: FontWeight.bold, fontSize:14,))
                           ],
                         ),
                         Row(
                           children: [
-                            Text('단맛', style: TextStyle(fontWeight: FontWeight.bold, fontSize:12, color: myColor.grayA,)),
+                            Text('산미', style: TextStyle(fontWeight: FontWeight.bold, fontSize:12, color: myColor.grayA,)),
                             SizedBox(width: 5,),
-                            Text('80', style: TextStyle(fontWeight: FontWeight.bold, fontSize:14,))
+                            Text(widget.sour.toString(), style: TextStyle(fontWeight: FontWeight.bold, fontSize:14,))
                           ],
                         ),
                       ],
@@ -104,16 +110,16 @@ class _ReviewDetailCardState extends State<ReviewDetailCard> {
                       children: [
                         Row(
                           children: [
-                            Text('단맛', style: TextStyle(fontWeight: FontWeight.bold, fontSize:12, color: myColor.grayA,)),
+                            Text('쓴맛', style: TextStyle(fontWeight: FontWeight.bold, fontSize:12, color: myColor.grayA,)),
                             SizedBox(width: 5,),
-                            Text('80', style: TextStyle(fontWeight: FontWeight.bold, fontSize:14,))
+                            Text(widget.bitter.toString(), style: TextStyle(fontWeight: FontWeight.bold, fontSize:14,))
                           ],
                         ),
                         Row(
                           children: [
-                            Text('단맛', style: TextStyle(fontWeight: FontWeight.bold, fontSize:12, color: myColor.grayA,)),
+                            Text('바디', style: TextStyle(fontWeight: FontWeight.bold, fontSize:12, color: myColor.grayA,)),
                             SizedBox(width: 5,),
-                            Text('80', style: TextStyle(fontWeight: FontWeight.bold, fontSize:14,))
+                            Text(widget.body.toString(), style: TextStyle(fontWeight: FontWeight.bold, fontSize:14,))
                           ],
                         ),
                       ],

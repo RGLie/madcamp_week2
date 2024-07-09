@@ -1,8 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:madcamp_week2/constants/colors.dart';
+import 'package:madcamp_week2/model/coffee_add_provider.dart';
 import 'package:madcamp_week2/widget/coffee_select_card.dart';
 import 'package:madcamp_week2/widget/tag_buttons.dart';
+import 'package:provider/provider.dart';
+
+import '../model/coffee_model.dart';
 
 class SpecialtyCoffee extends StatefulWidget {
   const SpecialtyCoffee({super.key});
@@ -12,6 +17,7 @@ class SpecialtyCoffee extends StatefulWidget {
 }
 
 class _SpecialtyCoffeeState extends State<SpecialtyCoffee> {
+  List<Widget> special_widgets = [];
   int nationFilter = 0;
   bool _nation = false;
   bool _farm = false;
@@ -19,113 +25,36 @@ class _SpecialtyCoffeeState extends State<SpecialtyCoffee> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left:8.0, right: 8),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              InkWell(
-                splashColor: myColor.background,
-                onTap: (){
-                  showDialog(
-                      context: context,
-                      barrierDismissible: true,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0)),
-                          //Dialog Main Title
-                          title: Column(
-                            children: <Widget>[
-                              new Text(
-                                "국가 선택",
-                                style:
-                                TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                          content: SizedBox(
-                              height: 250,
-                              width: 300,
-                              child: InkWell(
-                                onTap: (){
-                                  setState(() {
-                                    _nation = !_nation;
-                                  });
+    final coffeeProvider = Provider.of<CoffeeModel>(context);
+    final coffeeAddProvider = Provider.of<CoffeeAddProvider>(context);
+    // coffeeProvider.loadCoffee();
+    int getSpecial = 0;
+    // print(coffeeProvider.coffee_lst[0].script);
+    for(int i = 0; i < coffeeProvider.coffee_lst.length; i++){
+      if(coffeeProvider.coffee_lst[i].type == 'special'){
+        special_widgets.add(
+            CoffeeSelectCard(
+              id: coffeeProvider.coffee_lst[i].id,
+              img: coffeeProvider.coffee_lst[i].img,
+              name: coffeeProvider.coffee_lst[i].name,
+              eng_name: coffeeProvider.coffee_lst[i].name_eng,
+            )
+        );
 
-                                  Navigator.pop(context);
-                                },
-                                child: Container(
-                                  width: 100,
-                                  height: 100,
-                                  color: myColor.textColor,
-                                ),
-                              )
-                          ),
-                          actions: <Widget>[
-                            new ElevatedButton(
-                              child: new Text("닫기", style: TextStyle(color: myColor.cardColor),),
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: myColor.mainColor),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                            ),
-                          ],
-                        );
-                      });
+        special_widgets.add(
+          SizedBox(height: 10,),
+        );
+      }
+    }
 
 
-                },
-                child: TagButton(
-                  label: '국가',
-                  isSelected: _nation,
-                ),
-              ),
 
-              SizedBox(width: 10,),
+    return Column(
+      children: [
+        if(special_widgets.length == 0)...[Center(child: CircularProgressIndicator())],
+        if(special_widgets.length > 0)...special_widgets,
 
-              InkWell(
-                splashColor: myColor.background,
-                onTap: (){
-
-                  setState(() {
-                    _farm = !_farm;
-                  });
-                },
-                child: TagButton(
-                  label: '농장',
-                  isSelected: _farm,
-                ),
-              ),
-
-              SizedBox(width: 10,),
-
-              InkWell(
-                splashColor: myColor.background,
-                onTap: (){
-                  setState(() {
-                    _process = !_process;
-                  });
-                },
-                child: TagButton(
-                  label: '가공방식',
-                  isSelected: _process,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          CoffeeSelectCard(
-            img: 'assets/bean.png',
-            name: '에티오피아 예가체프 G2',
-            eng_name: 'Ethiopian Yirgacheffe G2',
-          )
-        ],
-      ),
+      ],
     );
   }
 }

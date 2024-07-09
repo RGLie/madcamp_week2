@@ -1,18 +1,79 @@
 import 'package:flutter/material.dart';
 import 'package:madcamp_week2/constants/colors.dart';
+import 'package:madcamp_week2/model/coffee.dart';
 import 'package:madcamp_week2/widget/review_card.dart';
 import 'package:madcamp_week2/widget/review_detail_card.dart';
+import 'package:provider/provider.dart';
+
+import '../model/coffee_note_model.dart';
 
 class CoffeeDetailPage extends StatefulWidget {
-  const CoffeeDetailPage({super.key});
+  Coffee coffee;
+
+  CoffeeDetailPage({super.key,
+    required this.coffee,
+  });
 
   @override
   State<CoffeeDetailPage> createState() => _CoffeeDetailPageState();
 }
 
 class _CoffeeDetailPageState extends State<CoffeeDetailPage> {
+  List<Widget> review_widgets = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+
+
+
+
+      dynamic coffeeNoteProvier = Provider.of<CoffeeNoteModel>(context, listen: false);
+      for(var c=0; c<widget.coffee.review_lst.length; c++){
+        for(int i = 0; i < coffeeNoteProvier.coffee_note_lst.length; i++){
+          if(coffeeNoteProvier.coffee_note_lst[i].id == widget.coffee.review_lst[c]){
+            review_widgets.add(
+                ReviewDetailCard(
+                    img: "",
+                    score: coffeeNoteProvier.coffee_note_lst[i].overall_score,
+                    feels: coffeeNoteProvier.coffee_note_lst[i].feeling,
+                    sweet: coffeeNoteProvier.coffee_note_lst[i].taste_sweet,
+                    sour: coffeeNoteProvier.coffee_note_lst[i].taste_sour,
+                    bitter: coffeeNoteProvier.coffee_note_lst[i].taste_bitter,
+                    body: coffeeNoteProvier.coffee_note_lst[i].taste_body
+                )
+            );
+
+            review_widgets.add(
+              SizedBox(height: 10,),
+            );
+          }
+        }
+      }
+
+
+    });
+
+  }
+
+
   @override
   Widget build(BuildContext context) {
+    final coffeeNoteProvider = Provider.of<CoffeeNoteModel>(context);
+
+
+    int score = 0;
+
+    for(var i = 0; i<widget.coffee.review_lst.length; i++){
+      for(var j =0; j<coffeeNoteProvider.coffee_note_lst.length;j++){
+        if(coffeeNoteProvider.coffee_note_lst[j].id == widget.coffee.review_lst[i]){
+          score += coffeeNoteProvider.coffee_note_lst[j].overall_score;
+        }
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: myColor.background,
@@ -25,24 +86,22 @@ class _CoffeeDetailPageState extends State<CoffeeDetailPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image(
+              Image.network(
+                widget.coffee.img,
                 width: 250,
-                image: AssetImage(
-                    'assets/bean.png'
-                ),
               ),
-              Text('스페셜티 커피',
+              Text(widget.coffee.type=='special'?'스페셜티 커피':widget.coffee.type=='franchise'?'프랜차이즈 커피':'기타 커피',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize:14, color: myColor.textColor),
               ),
               SizedBox(height: 10,),
-              Text('브라질 옐로우 버본',
+              Text(widget.coffee.name,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize:20, color: Colors.black),
               ),
-              Text('Brazil Yellow Bourbon',
+              Text(widget.coffee.name_eng,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize:16, color: Color(0xFF5E5E5E)),
               ),
               SizedBox(height: 20,),
-              Text('브라질 옐로우 버번은 세하도 지역의 커피로 세하도 지역의 천혜의 자연환경에 특별관리로 수확된 커피입니다. 보통 붉은 색을 띄는 체리와 다르게 노란색을 띄는 옐로우버번 품종은 특유의 열대과일 향미와 달콤한 맛이 일품인 커피입니다.',
+              Text(widget.coffee.script,
                 style: TextStyle(fontSize:14, color: myColor.gray3),
               ),
               SizedBox(height: 20,),
@@ -59,14 +118,14 @@ class _CoffeeDetailPageState extends State<CoffeeDetailPage> {
                   ),
                   child: Column(
                     children: [
-                      Text('32개의 리뷰',
+                      Text('${widget.coffee.review_lst.length.toString()}개의 리뷰',
                         style: TextStyle(color: myColor.cardColor),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text('96.3',
+                          Text(widget.coffee.review_lst.length==0?' - ':(score/widget.coffee.review_lst.length).toString(),
                             style: TextStyle(color: myColor.cardColor, fontWeight: FontWeight.bold, fontSize: 65, height: 1.0),
                           ),
                           Text('/100',
@@ -82,18 +141,7 @@ class _CoffeeDetailPageState extends State<CoffeeDetailPage> {
               SizedBox(
                 height: 50,
               ),
-              ReviewDetailCard(),
-              SizedBox(
-                height: 10,
-              ),
-              ReviewDetailCard(),
-              SizedBox(
-                height: 10,
-              ),
-              ReviewDetailCard(),
-              SizedBox(
-                height: 10,
-              ),
+              if(true)...review_widgets,
 
               SizedBox(height: 45,)
           

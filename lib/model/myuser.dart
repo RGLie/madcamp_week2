@@ -1,5 +1,5 @@
 class MyUser {
-  int id;
+  String id;
   Properties properties;
 
   MyUser({
@@ -10,7 +10,7 @@ class MyUser {
   // Json 받아서 모델 생성
   factory MyUser.fromJson(Map<String, dynamic> json) {
     return MyUser(
-      id: json['id'],
+      id: json['id'].toString(),
       properties: Properties.fromJson(json['properties'])
 
     );

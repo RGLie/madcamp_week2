@@ -2,7 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:madcamp_week2/constants/colors.dart';
+import 'package:madcamp_week2/model/coffee_model.dart';
 import 'package:madcamp_week2/widget/review_card.dart';
+import 'package:provider/provider.dart';
+
+import '../model/coffee.dart';
 
 class ReviewPage extends StatefulWidget {
   const ReviewPage({super.key});
@@ -14,6 +18,25 @@ class ReviewPage extends StatefulWidget {
 class _ReviewPageState extends State<ReviewPage> {
   @override
   Widget build(BuildContext context) {
+    final coffeeProvider = Provider.of<CoffeeModel>(context);
+
+    List<Coffee> special_list = [];
+    List<Coffee> franchise_list = [];
+    List<Coffee> etc_list = [];
+
+
+    for(var i = 0; i<coffeeProvider.coffee_lst.length; i++){
+      if(coffeeProvider.coffee_lst[i].type == 'special'){
+        special_list.add(coffeeProvider.coffee_lst[i]);
+      }
+      else if(coffeeProvider.coffee_lst[i].type == 'franchise'){
+        franchise_list.add(coffeeProvider.coffee_lst[i]);
+      }
+      else if(coffeeProvider.coffee_lst[i].type == 'etc'){
+        etc_list.add(coffeeProvider.coffee_lst[i]);
+      }
+    }
+
     return DefaultTabController(
       animationDuration: const Duration(milliseconds: 300),
       length: 4,
@@ -96,11 +119,11 @@ class _ReviewPageState extends State<ReviewPage> {
                 Container(
                   padding: EdgeInsets.all(15),
                   child: ListView.builder(
-                    itemCount: 9,
+                    itemCount: coffeeProvider.coffee_lst.length,
                     itemBuilder: (context, index){
                       return Column(
                         children: [
-                          ReviewCard(),
+                          ReviewCard(coffee: coffeeProvider.coffee_lst[index],),
                           SizedBox(height: 20,)
                         ],
                       );
@@ -110,11 +133,11 @@ class _ReviewPageState extends State<ReviewPage> {
                 Container(
                   padding: EdgeInsets.all(15),
                   child: ListView.builder(
-                    itemCount: 3,
+                    itemCount: special_list.length,
                     itemBuilder: (context, index){
                       return Column(
                         children: [
-                          ReviewCard(),
+                          ReviewCard(coffee: special_list[index],),
                           SizedBox(height: 20,)
                         ],
                       );
@@ -124,11 +147,11 @@ class _ReviewPageState extends State<ReviewPage> {
                 Container(
                   padding: EdgeInsets.all(15),
                   child: ListView.builder(
-                    itemCount: 3,
+                    itemCount: franchise_list.length,
                     itemBuilder: (context, index){
                       return Column(
                         children: [
-                          ReviewCard(),
+                          ReviewCard(coffee: franchise_list[index],),
                           SizedBox(height: 20,)
                         ],
                       );
@@ -139,11 +162,11 @@ class _ReviewPageState extends State<ReviewPage> {
                 Container(
                   padding: EdgeInsets.all(15),
                   child: ListView.builder(
-                    itemCount: 3,
+                    itemCount: etc_list.length,
                     itemBuilder: (context, index){
                       return Column(
                         children: [
-                          ReviewCard(),
+                          ReviewCard(coffee: etc_list[index],),
                           SizedBox(height: 20,)
                         ],
                       );

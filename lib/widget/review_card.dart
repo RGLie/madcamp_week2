@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:madcamp_week2/constants/colors.dart';
+import 'package:madcamp_week2/model/coffee.dart';
 import 'package:madcamp_week2/pages/coffee_detail_page.dart';
+import 'package:provider/provider.dart';
+
+import '../model/coffee_note_model.dart';
 
 
 class ReviewCard extends StatefulWidget {
-  const ReviewCard({super.key});
+  Coffee coffee;
+
+  ReviewCard({super.key,
+    required this.coffee
+  });
 
   @override
   State<ReviewCard> createState() => _ReviewCardState();
@@ -13,6 +21,19 @@ class ReviewCard extends StatefulWidget {
 class _ReviewCardState extends State<ReviewCard> {
   @override
   Widget build(BuildContext context) {
+    final coffeeNoteProvider = Provider.of<CoffeeNoteModel>(context);
+
+    int score = 0;
+
+    for(var i = 0; i<widget.coffee.review_lst.length; i++){
+      for(var j =0; j<coffeeNoteProvider.coffee_note_lst.length;j++){
+        if(coffeeNoteProvider.coffee_note_lst[j].id == widget.coffee.review_lst[i]){
+          score += coffeeNoteProvider.coffee_note_lst[j].overall_score;
+        }
+      }
+    }
+
+
     return Card(
       surfaceTintColor: myColor.cardColor,
       color: myColor.cardColor,
@@ -30,7 +51,7 @@ class _ReviewCardState extends State<ReviewCard> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => CoffeeDetailPage()));
+                  builder: (context) => CoffeeDetailPage(coffee: widget.coffee)));
         },
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20),
@@ -40,11 +61,9 @@ class _ReviewCardState extends State<ReviewCard> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Image(
+                  Image.network(
+                    widget.coffee.img,
                     width: 100,
-                    image: AssetImage(
-                        'assets/bean.png'
-                    ),
                   ),
 
                   SizedBox(width: 20,),
@@ -55,7 +74,7 @@ class _ReviewCardState extends State<ReviewCard> {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text('96.3',
+                          Text(widget.coffee.review_lst.length==0?' - ':(score/widget.coffee.review_lst.length).toString(),
                             style: TextStyle(fontWeight: FontWeight.bold, fontSize:45, color: myColor.textColor, height: 1.0),
                           ),
                           SizedBox(width: 3,),
@@ -64,7 +83,7 @@ class _ReviewCardState extends State<ReviewCard> {
                           ),
                         ],
                       ),
-                      Text('32개의 리뷰',
+                      Text('${widget.coffee.review_lst.length}개의 리뷰',
                         style: TextStyle(color: myColor.grayA, fontSize: 16),
                       )
                     ],
@@ -72,19 +91,19 @@ class _ReviewCardState extends State<ReviewCard> {
                 ],
               ),
               SizedBox(height: 10,),
-              Text('스페셜티 커피',
+              Text(widget.coffee.type=='special'?'스페셜티 커피':widget.coffee.type=='franchise'?'프랜차이즈 커피':'기타 커피',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize:14, color: myColor.textColor),
               ),
               SizedBox(height: 10,),
-              Text('브라질 옐로우 버본',
+              Text(widget.coffee.name,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize:20, color: Colors.black),
               ),
-              Text('Brazil Yellow Bourbon',
+              Text(widget.coffee.name_eng,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize:16, color: Color(0xFF5E5E5E)),
               ),
               SizedBox(height: 15,),
 
-              Text('브라질 옐로우 버번은 세하도 지역의 커피로 세하도 지역의 천혜의 자연환경에 특별관리로 수확된 커피입니다. 보통 붉은 색을 띄는 체리와 다르게 노란색을 띄는 옐로우버번 품종은 특유의 열대과일 향미와 달콤한 맛이 일품인 커피입니다.',
+              Text(widget.coffee.script,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(fontSize:13, color: myColor.gray3),

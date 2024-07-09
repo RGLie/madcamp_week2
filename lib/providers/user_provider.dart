@@ -1,13 +1,17 @@
 import 'dart:convert' as convert;
 import 'dart:convert';
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk_talk.dart';
+import 'package:madcamp_week2/model/coffee.dart';
 
+import '../constants/url.dart';
+import '../model/coffee_user.dart';
 import '../model/myuser.dart';
 
 
@@ -17,6 +21,9 @@ class UserController with ChangeNotifier {
 
   MyUser? _profileInfo = null;
   MyUser? get profileInfo => _profileInfo;
+
+  CoffeeUser? _coffeeUser = null;
+  CoffeeUser? get coffeeUser => _coffeeUser;
 
   void signInKakao() async{
     // if (await isKakaoTalkInstalled()) {
@@ -121,5 +128,29 @@ class UserController with ChangeNotifier {
     _profileInfo = null;
     _token = null;
     notifyListeners();
+  }
+
+
+
+  Future<bool> getCoffeeUserData() async {
+    var dio = Dio();
+
+    try {
+      final response = await dio.post(
+          API_COFFEE_USER_LOGIN,
+          data: {
+            "id": _profileInfo?.id.toString(),
+            "name": _profileInfo?.properties.nickname
+          });
+
+      final user = CoffeeUser.fromJson(response.data['data']);
+      _coffeeUser = user;
+
+      notifyListeners();
+      return true;
+    } catch (exception) {
+      print(exception);
+    }
+    return false;
   }
 }

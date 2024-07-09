@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:madcamp_week2/constants/colors.dart';
+import 'package:madcamp_week2/pages/my_review_page.dart';
 import 'package:madcamp_week2/pages/note_page.dart';
 import 'package:madcamp_week2/pages/review_page.dart';
 import 'package:motion_tab_bar/MotionTabBar.dart';
@@ -78,7 +79,8 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin {
             )
           ],
         ),
-        backgroundColor: myColor.background,
+        backgroundColor: myColor.cardColor,
+        // elevation: 1,
         foregroundColor: myColor.textColor,
       ),
 
@@ -118,7 +120,7 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin {
           NotePage(),
           ReviewPage(),
           Text('안녕'),
-          Text('안녕'),
+          MyReviewPage(),
         ],
       ),
     );

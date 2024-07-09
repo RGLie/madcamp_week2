@@ -1,9 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:interactive_slider/interactive_slider.dart';
 import 'package:madcamp_week2/constants/colors.dart';
-import 'package:madcamp_week2/model/test_model.dart';
+import 'package:madcamp_week2/model/coffee_add_provider.dart';
+import 'package:madcamp_week2/model/coffee_model.dart';
+import 'package:madcamp_week2/model/coffee_note.dart';
+import 'package:madcamp_week2/model/coffee_note_model.dart';
 import 'package:madcamp_week2/pages/select_coffee_page.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
@@ -23,28 +27,35 @@ class _NotePageState extends State<NotePage> {
 
 
 
-  int selectedFloral = 0;
-  int selectedFruit = 0;
-  int selectedBerry = 0;
-  int selectedChocolate = 0;
-  int selectedNut = 0;
-  int selectedCereal = 0;
+  bool selectedFloral = false;
+  bool selectedFruit = false;
+  bool selectedBerry = false;
+  bool selectedChocolate = false;
+  bool selectedNut = false;
+  bool selectedCereal = false;
 
 
-  double currentValue = 0.0;
+  double sweetValue = 0.0;
+  double sourValue = 0.0;
+  double bitterValue = 0.0;
+  double bodyValue = 0.0;
+
   double scoreValue = 50;
 
   @override
   Widget build(BuildContext context) {
-    final planners = Provider.of<HumanModel>(context);
+    final coffeeNoteProvider = Provider.of<CoffeeNoteModel>(context);
+    final coffeeProvider = Provider.of<CoffeeModel>(context);
+    final coffeeAddProvider = Provider.of<CoffeeAddProvider>(context);
     final userProvider = Provider.of<UserController>(context);
     
     return Padding(
-      padding: const EdgeInsets.only(left: 15, right: 15, top: 30.0),
+      padding: const EdgeInsets.only(left: 15, right: 15, ),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            SizedBox(height:15),
             Text(
               '안녕하세요, ${userProvider.profileInfo?.properties.nickname.toString()} 님!',
               style: TextStyle(color: myColor.textColor, fontWeight: FontWeight.bold, fontSize: 24),
@@ -86,15 +97,7 @@ class _NotePageState extends State<NotePage> {
               ],
             ),
             SizedBox(height: 5,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('커피를 선택해주세요', style: TextStyle(color: myColor.grayA),),
-                if(planners.human_lst.length>0)...[
-                  Text(planners.human_lst[3].name)
-                ]
-              ],
-            ),
+
             SizedBox(height: 5,),
             Container(
               height: 50,
@@ -104,11 +107,12 @@ class _NotePageState extends State<NotePage> {
                   backgroundColor: myColor.textColor,
                 ),
                 onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => SelectCoffeePage()));
-                  planners.loadHuman();
-
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SelectCoffeePage()),
+                  );
                 },
-                child: Text('커피 선택하기', style: TextStyle(color: myColor.cardColor),),
+                child: Text(coffeeAddProvider.selectedCofffeeID == ''?'커피 선택하기':coffeeAddProvider.selectedCoffeeName, style: TextStyle(color: myColor.cardColor),),
               ),
             ),
             SizedBox(height: 30,),
@@ -140,17 +144,17 @@ class _NotePageState extends State<NotePage> {
                   // disabledColor: myColor.barColor,
                   backgroundColor: myColor.cardColor,
                   checkmarkColor: myColor.cardColor,
-                  selected: selectedFloral ==1,
+                  selected: selectedFloral,
                   iconTheme: IconThemeData(
                     color: Colors.red
                   ),
                   onSelected: (selected) {
                     setState(() {
-                      selectedFloral = (selectedFloral+1)%2;
+                      selectedFloral = !selectedFloral;
                     });
                   },
                   labelStyle: TextStyle(
-                    color:selectedFloral ==1? myColor.cardColor:myColor.textColor,
+                    color:selectedFloral? myColor.cardColor:myColor.textColor,
                   ),
                 ),
                 ChoiceChip(
@@ -160,17 +164,17 @@ class _NotePageState extends State<NotePage> {
                   // disabledColor: myColor.barColor,
                   backgroundColor: myColor.cardColor,
                   checkmarkColor: myColor.cardColor,
-                  selected: selectedFruit ==1,
+                  selected: selectedFruit,
                   iconTheme: IconThemeData(
                       color: Colors.red
                   ),
                   onSelected: (selected) {
                     setState(() {
-                      selectedFruit = (selectedFruit+1)%2;
+                      selectedFruit = !selectedFruit;
                     });
                   },
                   labelStyle: TextStyle(
-                    color:selectedFruit ==1? myColor.cardColor:myColor.textColor,
+                    color:selectedFruit? myColor.cardColor:myColor.textColor,
                   ),
                 ),
                 ChoiceChip(
@@ -180,17 +184,17 @@ class _NotePageState extends State<NotePage> {
                   // disabledColor: myColor.barColor,
                   backgroundColor: myColor.cardColor,
                   checkmarkColor: myColor.cardColor,
-                  selected: selectedBerry ==1,
+                  selected: selectedBerry,
                   iconTheme: IconThemeData(
                       color: Colors.red
                   ),
                   onSelected: (selected) {
                     setState(() {
-                      selectedBerry = (selectedBerry+1)%2;
+                      selectedBerry = !selectedBerry;
                     });
                   },
                   labelStyle: TextStyle(
-                    color:selectedBerry ==1? myColor.cardColor:myColor.textColor,
+                    color:selectedBerry? myColor.cardColor:myColor.textColor,
                   ),
                 ),
                 ChoiceChip(
@@ -200,17 +204,17 @@ class _NotePageState extends State<NotePage> {
                   // disabledColor: myColor.barColor,
                   backgroundColor: myColor.cardColor,
                   checkmarkColor: myColor.cardColor,
-                  selected: selectedNut ==1,
+                  selected: selectedNut,
                   iconTheme: IconThemeData(
                       color: Colors.red
                   ),
                   onSelected: (selected) {
                     setState(() {
-                      selectedNut = (selectedNut+1)%2;
+                      selectedNut =!selectedNut;
                     });
                   },
                   labelStyle: TextStyle(
-                    color:selectedNut ==1? myColor.cardColor:myColor.textColor,
+                    color:selectedNut? myColor.cardColor:myColor.textColor,
                   ),
                 ),
                 ChoiceChip(
@@ -220,17 +224,17 @@ class _NotePageState extends State<NotePage> {
                   // disabledColor: myColor.barColor,
                   backgroundColor: myColor.cardColor,
                   checkmarkColor: myColor.cardColor,
-                  selected: selectedChocolate ==1,
+                  selected: selectedChocolate,
                   iconTheme: IconThemeData(
                       color: Colors.red
                   ),
                   onSelected: (selected) {
                     setState(() {
-                      selectedChocolate = (selectedChocolate+1)%2;
+                      selectedChocolate = !selectedChocolate;
                     });
                   },
                   labelStyle: TextStyle(
-                    color:selectedChocolate ==1? myColor.cardColor:myColor.textColor,
+                    color:selectedChocolate? myColor.cardColor:myColor.textColor,
                   ),
                 ),
                 ChoiceChip(
@@ -240,17 +244,17 @@ class _NotePageState extends State<NotePage> {
                   // disabledColor: myColor.barColor,
                   backgroundColor: myColor.cardColor,
                   checkmarkColor: myColor.cardColor,
-                  selected: selectedCereal ==1,
+                  selected: selectedCereal,
                   iconTheme: IconThemeData(
                       color: Colors.red
                   ),
                   onSelected: (selected) {
                     setState(() {
-                      selectedCereal = (selectedCereal+1)%2;
+                      selectedCereal = !selectedCereal;
                     });
                   },
                   labelStyle: TextStyle(
-                    color:selectedCereal ==1? myColor.cardColor:myColor.textColor,
+                    color:selectedCereal? myColor.cardColor:myColor.textColor,
                   ),
                 ),
 
@@ -289,9 +293,7 @@ class _NotePageState extends State<NotePage> {
                           unfocusedOpacity: 1,
                           min: 0.0,
                           max: 100.0,
-                          onChanged: (value) {
-                            // print(value);
-                          },
+                          onChanged: (value) => setState(() => sweetValue = value),
                         ),
                       )
                     ],
@@ -315,7 +317,7 @@ class _NotePageState extends State<NotePage> {
                           unfocusedOpacity: 1,
                           min: 0.0,
                           max: 100.0,
-                          onChanged: (value) => setState(() => currentValue = value),
+                          onChanged: (value) => setState(() => sourValue = value),
                         ),
                       )
                     ],
@@ -338,7 +340,7 @@ class _NotePageState extends State<NotePage> {
                           unfocusedOpacity: 1,
                           min: 0.0,
                           max: 100.0,
-                          onChanged: (value) => setState(() => currentValue = value),
+                          onChanged: (value) => setState(() => bitterValue = value),
                         ),
                       )
                     ],
@@ -360,29 +362,7 @@ class _NotePageState extends State<NotePage> {
                           unfocusedOpacity: 1,
                           min: 0.0,
                           max: 100.0,
-                          onChanged: (value) => setState(() => currentValue = value),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-
-                Padding(
-                  padding: const EdgeInsets.only(left: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('로스팅', style: TextStyle(fontSize: 16, color: myColor.mainColor, fontWeight: FontWeight.bold),),
-                      Container(
-                        width: MediaQuery.of(context).size.width*0.75,
-                        child: InteractiveSlider(
-                          initialProgress: 0.3,
-                          backgroundColor: myColor.cardColor,
-                          foregroundColor: myColor.barColor,
-                          unfocusedOpacity: 1,
-                          min: 0.0,
-                          max: 100.0,
-                          onChanged: (value) => setState(() => currentValue = value),
+                          onChanged: (value) => setState(() => bodyValue = value),
                         ),
                       )
                     ],
@@ -517,7 +497,82 @@ class _NotePageState extends State<NotePage> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: myColor.textColor,
                       ),
-                      onPressed: (){},
+                      onPressed: () async{
+
+                        FocusScope.of(context).requestFocus(new FocusNode());
+
+                        if(coffeeAddProvider.selectedCofffeeID == ''){
+                          Fluttertoast.showToast(
+                              msg: "커피를 선택하여 주세요",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.CENTER,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Colors.redAccent,
+                              textColor: Colors.white,
+                              fontSize: 16.0
+                          );
+                          return;
+                        }
+
+
+                        if (_formKey.currentState!.validate()) {
+                          CoffeeNote newCoffeeNote = CoffeeNote(
+                              id: "0",
+                              written_id: userProvider.profileInfo!.id,
+                              coffee_id: coffeeAddProvider.selectedCofffeeID,
+                              note_floral: selectedFloral,
+                              note_fruit: selectedFruit,
+                              note_berry: selectedBerry,
+                              note_nut: selectedNut,
+                              note_choco: selectedChocolate,
+                              note_cereal: selectedCereal,
+                              taste_sweet: sweetValue.toInt(),
+                              taste_sour: sourValue.toInt(),
+                              taste_bitter: bitterValue.toInt(),
+                              taste_body: bodyValue.toInt(),
+                              overall_score: scoreValue.toInt(),
+                              feeling: _feelingController.text
+                          );
+
+                          bool write = await coffeeNoteProvider.createCoffeeNote(newCoffeeNote);
+
+                          if (write){
+                            Fluttertoast.showToast(
+                                msg: "커핑 노트 작성이 완료 되었습니다",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.CENTER,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: myColor.mainColor,
+                                textColor: Colors.white,
+                                fontSize: 16.0
+                            );
+
+                            _feelingController.clear();
+                            selectedFloral = false;
+                            selectedFruit = false;
+                            selectedBerry = false;
+                            selectedNut = false;
+                            selectedChocolate = false;
+                            selectedCereal = false;
+                            coffeeAddProvider.initialCoffee();
+                            coffeeProvider.addCoffeeNote(coffeeAddProvider.selectedCofffeeID, coffeeNoteProvider.coffee_note_lst[coffeeNoteProvider.coffee_note_lst.length-1].id);
+
+
+
+                          }
+                          else{
+                            Fluttertoast.showToast(
+                                msg: "커핑 노트 작성에 실패하였습니다",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.CENTER,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Colors.redAccent,
+                                textColor: Colors.white,
+                                fontSize: 16.0
+                            );
+                          }
+                        }
+                      },
                       child: Text('작성 완료', style: TextStyle(color: myColor.cardColor),),
                     ),
                   ),

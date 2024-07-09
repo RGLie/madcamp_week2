@@ -90,6 +90,7 @@ class _CoffeeDetailPageState extends State<CoffeeDetailPage> {
                 widget.coffee.img,
                 width: 250,
               ),
+              SizedBox(height: 20,),
               Text(widget.coffee.type=='special'?'스페셜티 커피':widget.coffee.type=='franchise'?'프랜차이즈 커피':'기타 커피',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize:14, color: myColor.textColor),
               ),

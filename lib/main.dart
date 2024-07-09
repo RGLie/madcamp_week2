@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:madcamp_week2/constants/colors.dart';
@@ -11,16 +9,7 @@ import 'package:madcamp_week2/pages/root_page.dart';
 import 'package:madcamp_week2/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
-class MyHttpOverrides extends HttpOverrides{
-  @override
-  HttpClient createHttpClient(SecurityContext? context){
-    return super.createHttpClient(context)
-      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
-  }
-}
-
 void main() {
-  HttpOverrides.global = MyHttpOverrides();
   KakaoSdk.init(nativeAppKey: '68780500961d2727792ebaed3c71f633');
   runApp(const MyApp());
 }
